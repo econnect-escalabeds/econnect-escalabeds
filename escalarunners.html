@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escalarunners | e-connect</title>
+<link rel="icon" href="assets/logo-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap">
+    <a href="index.html" class="nav-brand"><img src="assets/logo-mark.svg" alt="e-connect">econnect</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="escalarunners.html" class="active">Escalarunners</a></li>
+      <li><a href="bookclub.html">Book Club</a></li>
+      <li><a href="futbol.html">Fútbol</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="hero-tag">Club de corredores · Desde 2023</span>
+    <h1>Escala<span>runners</span></h1>
+    <p class="lead">Un espacio para moverse, retarse y sumar kilómetros en comunidad. Corre a tu ritmo, registra tus resultados y súmalos a la meta del equipo.</p>
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSci-CEIf4W-_IlfGkbk4YwymMD-W8kK656UY9bDaTCDWi7UmA/viewform?usp=sharing" target="_blank" rel="noopener" class="btn">Registra tu resultado →</a>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <span class="eyebrow">Próximo evento</span>
+    <ul class="events">
+      <li><span class="date">01 Ago</span><span class="desc">Encuentro Escalarunners</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="section-alt" id="dashboard">
+  <div class="wrap">
+    <span class="eyebrow">En vivo</span>
+    <h2 class="section-title">Dashboard del club</h2>
+    <p style="color:var(--gray);max-width:640px;">Estos datos se actualizan automáticamente con cada resultado registrado en el formulario.</p>
+
+    <div id="dash-empty" class="empty-state" style="display:none;"></div>
+
+    <div class="dash-grid">
+      <div class="dash-card">
+        <h3>🏆 Ranking individual — Top corredores</h3>
+        <table class="rank">
+          <thead><tr><th>#</th><th>Nombre</th><th>Km acumulados</th></tr></thead>
+          <tbody id="rank-body"></tbody>
+        </table>
+      </div>
+      <div class="dash-card">
+        <h3>🎯 Progreso grupal — Meta del mes</h3>
+        <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+        <p class="progress-label" id="progress-label">Cargando…</p>
+        <p class="dash-note">Meta colectiva: 300 km este mes. Cada kilómetro registrado por el equipo suma aquí.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="cta-band">
+      <div>
+        <h3>¿Ya corriste esta semana?</h3>
+        <p>Registra tu distancia y súmala al equipo.</p>
+      </div>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSci-CEIf4W-_IlfGkbk4YwymMD-W8kK656UY9bDaTCDWi7UmA/viewform?usp=sharing" target="_blank" rel="noopener" class="btn btn-blue">Registrar resultado</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Escalabeds — Programa e-connect</span>
+    <span>Bienestar interno · Uso exclusivo del equipo</span>
+  </div>
+</footer>
+
+<script src="js/dashboard.js"></script>
+</body>
+</html>
