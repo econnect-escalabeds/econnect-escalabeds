@@ -2,7 +2,7 @@
 // Publicada como CSV. No requiere backend: cada carga de página trae los datos más recientes.
 
 const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTMcGW2fT8advta_pw3riL6VWtKq7kvpuj4OTRveeVkyXrnt4FRwKTKy5NDg7qK_5H_PhiY1dCIgpvO/pub?output=csv";
-const META_KM = 300; // meta colectiva del mes — edítala aquí cuando cambie
+const META_KM = 380; // meta colectiva del mes — edítala aquí cuando cambie
 
 function parseCSV(text) {
   // Parser simple que respeta comillas de CSV estándar de Google Sheets
