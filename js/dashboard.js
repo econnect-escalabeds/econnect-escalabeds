@@ -82,8 +82,7 @@ async function loadDashboard() {
     }
 
     const ranked = Object.entries(totals)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 10);
+      .sort((a, b) => b[1] - a[1]);
 
     if (ranked.length === 0) {
       showEmpty();
