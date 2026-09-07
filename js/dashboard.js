@@ -86,7 +86,7 @@ async function loadDashboard() {
       return;
     }
 
-    const totals = {}; // nombre -> { [MES_1.label]: km, [MES_2.label]: km, total: km }
+    const totals = {}; // nombre -> { [MES_1.label]: km, [MES_2.label]: km, actividadesMes2: n, total: km }
     let mes2Total = 0;
     let grandTotal = 0;
 
@@ -96,7 +96,7 @@ async function loadDashboard() {
       const km = parseDistance(r[distIdx]);
       if (!name) continue;
 
-      if (!totals[name]) totals[name] = { [MES_1.label]: 0, [MES_2.label]: 0, total: 0 };
+      if (!totals[name]) totals[name] = { [MES_1.label]: 0, [MES_2.label]: 0, actividadesMes2: 0, total: 0 };
       totals[name].total += km;
       grandTotal += km;
 
@@ -105,6 +105,7 @@ async function loadDashboard() {
         totals[name][MES_1.label] += km;
       } else if (mes === MES_2.num) {
         totals[name][MES_2.label] += km;
+        totals[name].actividadesMes2 += 1; // cuenta toda actividad (correr o fuerza) registrada en el mes
         mes2Total += km;
       }
     }
@@ -124,6 +125,7 @@ async function loadDashboard() {
         <td>${escapeHtml(name)}</td>
         <td>${km[MES_1.label].toFixed(1)} km</td>
         <td>${km[MES_2.label].toFixed(1)} km</td>
+        <td>${km.actividadesMes2}</td>
         <td>${km.total.toFixed(1)} km</td>
       </tr>
     `).join("");
