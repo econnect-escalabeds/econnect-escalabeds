@@ -9,7 +9,7 @@ const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTMcGW2fT
 const MES_1 = { num: 8, label: "KM Agosto" };
 const MES_2 = { num: 9, label: "KM Septiembre" };
 
-const META_KM = 380; // meta colectiva del mes en curso (Septiembre) — edítala aquí cuando cambie
+const META_KM = 800; // meta colectiva del mes en curso (Septiembre) — edítala aquí cuando cambie
 
 function parseCSV(text) {
   // Parser simple que respeta comillas de CSV estándar de Google Sheets
@@ -111,7 +111,7 @@ async function loadDashboard() {
     }
 
     const ranked = Object.entries(totals)
-      .sort((a, b) => b[1][MES_2.label] - a[1][MES_2.label]);
+      .sort((a, b) => b[1].total - a[1].total);
 
     if (ranked.length === 0) {
       showEmpty();
