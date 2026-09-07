@@ -2,7 +2,14 @@
 // Publicada como CSV. No requiere backend: cada carga de página trae los datos más recientes.
 
 const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTMcGW2fT8advta_pw3riL6VWtKq7kvpuj4OTRveeVkyXrnt4FRwKTKy5NDg7qK_5H_PhiY1dCIgpvO/pub?output=csv";
-const META_KM = 380; // meta colectiva del mes — edítala aquí cuando cambie
+
+// Meses que se muestran en el dashboard, según el número de mes (1-12) de la
+// columna "Fecha de la actividad" del formulario. Cuando empiece un nuevo mes,
+// actualiza MES_1/MES_2 aquí (MES_1 pasa a ser el mes recién cerrado).
+const MES_1 = { num: 8, label: "KM Agosto" };
+const MES_2 = { num: 9, label: "KM Septiembre" };
+
+const META_KM = 380; // meta colectiva del mes en curso (Septiembre) — edítala aquí cuando cambie
 
 function parseCSV(text) {
   // Parser simple que respeta comillas de CSV estándar de Google Sheets
@@ -43,6 +50,15 @@ function parseDistance(raw) {
   return isNaN(val) ? 0 : val;
 }
 
+function parseMonthNumber(raw) {
+  // "Fecha de la actividad" viene como D/M/AAAA (formato del Google Form).
+  if (!raw) return null;
+  const parts = raw.toString().trim().split("/");
+  if (parts.length < 2) return null;
+  const mes = parseInt(parts[1], 10);
+  return isNaN(mes) ? null : mes;
+}
+
 async function loadDashboard() {
   const rankEl = document.getElementById("rank-body");
   const progressFill = document.getElementById("progress-fill");
@@ -63,26 +79,38 @@ async function loadDashboard() {
     const headers = rows[0];
     const nameIdx = findCol(headers, ["nombre"]);
     const distIdx = findCol(headers, ["distancia", "km"]);
+    const dateIdx = findCol(headers, ["fecha de la actividad", "fecha"]);
 
     if (nameIdx === -1 || distIdx === -1) {
       showEmpty("No se encontraron las columnas de nombre o distancia en la hoja.");
       return;
     }
 
-    const totals = {};
-    let groupTotal = 0;
+    const totals = {}; // nombre -> { [MES_1.label]: km, [MES_2.label]: km, total: km }
+    let mes2Total = 0;
+    let grandTotal = 0;
 
     for (let i = 1; i < rows.length; i++) {
       const r = rows[i];
       const name = (r[nameIdx] || "").trim();
       const km = parseDistance(r[distIdx]);
       if (!name) continue;
-      totals[name] = (totals[name] || 0) + km;
-      groupTotal += km;
+
+      if (!totals[name]) totals[name] = { [MES_1.label]: 0, [MES_2.label]: 0, total: 0 };
+      totals[name].total += km;
+      grandTotal += km;
+
+      const mes = dateIdx !== -1 ? parseMonthNumber(r[dateIdx]) : null;
+      if (mes === MES_1.num) {
+        totals[name][MES_1.label] += km;
+      } else if (mes === MES_2.num) {
+        totals[name][MES_2.label] += km;
+        mes2Total += km;
+      }
     }
 
     const ranked = Object.entries(totals)
-      .sort((a, b) => b[1] - a[1]);
+      .sort((a, b) => b[1][MES_2.label] - a[1][MES_2.label]);
 
     if (ranked.length === 0) {
       showEmpty();
@@ -94,13 +122,15 @@ async function loadDashboard() {
       <tr>
         <td><span class="rank-pos">${idx + 1}</span></td>
         <td>${escapeHtml(name)}</td>
-        <td>${km.toFixed(1)} km</td>
+        <td>${km[MES_1.label].toFixed(1)} km</td>
+        <td>${km[MES_2.label].toFixed(1)} km</td>
+        <td>${km.total.toFixed(1)} km</td>
       </tr>
     `).join("");
 
-    const pct = Math.min(100, (groupTotal / META_KM) * 100);
+    const pct = Math.min(100, (mes2Total / META_KM) * 100);
     progressFill.style.width = pct + "%";
-    progressLabel.textContent = `${groupTotal.toFixed(1)} km de ${META_KM} km · ${pct.toFixed(0)}% de la meta del mes`;
+    progressLabel.textContent = `${mes2Total.toFixed(1)} km de ${META_KM} km · ${pct.toFixed(0)}% de la meta de septiembre · Acumulado total del club: ${grandTotal.toFixed(1)} km`;
 
   } catch (err) {
     console.error(err);
@@ -115,7 +145,7 @@ function showEmpty(msg) {
   const progressLabel = document.getElementById("progress-label");
   rankEl.innerHTML = "";
   progressFill.style.width = "0%";
-  progressLabel.textContent = `0 km de ${META_KM} km · 0% de la meta del mes`;
+  progressLabel.textContent = `0 km de ${META_KM} km · 0% de la meta de septiembre`;
   emptyEl.style.display = "block";
   emptyEl.textContent = msg || "Aún no hay registros. ¡Sé el primero en registrar tu resultado!";
 }
