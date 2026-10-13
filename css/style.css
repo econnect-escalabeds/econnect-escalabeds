@@ -138,7 +138,7 @@ footer{background:var(--black);color:#B8B8B4;padding:34px 0;font-size:.85rem;}
 footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;}
 
 /* DASHBOARD */
-.dash-grid{display:grid;grid-template-columns:2fr 1fr;gap:24px;margin-top:32px;align-items:start;}
+.dash-grid{display:grid;grid-template-columns:2.4fr 1fr;gap:24px;margin-top:32px;align-items:start;}
 .dash-card{background:#fff;border-radius:var(--radius);padding:26px;box-shadow:0 2px 12px rgba(0,0,0,.06);min-width:0;}
 .dash-card h3{font-size:1.1rem;margin-bottom:16px;}
 .progress-track{background:#EDEDE8;border-radius:999px;height:12px;overflow:hidden;}
@@ -146,8 +146,8 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;
 .progress-label{margin-top:10px;font-weight:600;font-size:.9rem;color:var(--gray);}
 .table-scroll{overflow-x:auto;}
 table.rank{width:100%;border-collapse:collapse;font-size:.92rem;}
-table.rank th{text-align:left;color:var(--gray);font-size:.75rem;text-transform:uppercase;letter-spacing:.04em;padding:6px 8px;border-bottom:2px solid #EDEDE8;white-space:nowrap;}
-table.rank td{padding:10px 8px;border-bottom:1px solid #F0F0EC;white-space:nowrap;}
+table.rank th{text-align:left;color:var(--gray);font-size:.72rem;text-transform:uppercase;letter-spacing:.03em;padding:6px 7px;border-bottom:2px solid #EDEDE8;white-space:nowrap;}
+table.rank td{padding:10px 7px;border-bottom:1px solid #F0F0EC;white-space:nowrap;}
 table.rank td:nth-child(2){white-space:normal;min-width:110px;}
 table.rank tr:first-child td{font-weight:700;}
 .rank-pos{
