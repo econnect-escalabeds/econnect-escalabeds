@@ -5,11 +5,12 @@ const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTMcGW2fT
 
 // Meses que se muestran en el dashboard, según el número de mes (1-12) de la
 // columna "Fecha de la actividad" del formulario. Cuando empiece un nuevo mes,
-// actualiza MES_1/MES_2 aquí (MES_1 pasa a ser el mes recién cerrado).
+// agrega un nuevo MES_N aquí (los meses anteriores se quedan como columnas históricas).
 const MES_1 = { num: 8, label: "KM Agosto" };
 const MES_2 = { num: 9, label: "KM Septiembre" };
+const MES_3 = { num: 10, label: "KM Octubre" };
 
-const META_KM = 800; // meta colectiva del mes en curso (Septiembre) — edítala aquí cuando cambie
+const META_KM = 800; // meta colectiva del mes en curso (Octubre) — edítala aquí cuando cambie
 
 function parseCSV(text) {
   // Parser simple que respeta comillas de CSV estándar de Google Sheets
@@ -86,8 +87,8 @@ async function loadDashboard() {
       return;
     }
 
-    const totals = {}; // nombre -> { [MES_1.label]: km, [MES_2.label]: km, actividadesMes2: n, total: km }
-    let mes2Total = 0;
+    const totals = {}; // nombre -> { [MES_1.label]: km, [MES_2.label]: km, actividadesMes2: n, [MES_3.label]: km, total: km }
+    let mes3Total = 0;
     let grandTotal = 0;
 
     for (let i = 1; i < rows.length; i++) {
@@ -96,7 +97,7 @@ async function loadDashboard() {
       const km = parseDistance(r[distIdx]);
       if (!name) continue;
 
-      if (!totals[name]) totals[name] = { [MES_1.label]: 0, [MES_2.label]: 0, actividadesMes2: 0, total: 0 };
+      if (!totals[name]) totals[name] = { [MES_1.label]: 0, [MES_2.label]: 0, actividadesMes2: 0, [MES_3.label]: 0, total: 0 };
       totals[name].total += km;
       grandTotal += km;
 
@@ -106,7 +107,9 @@ async function loadDashboard() {
       } else if (mes === MES_2.num) {
         totals[name][MES_2.label] += km;
         totals[name].actividadesMes2 += 1; // cuenta toda actividad (correr o fuerza) registrada en el mes
-        mes2Total += km;
+      } else if (mes === MES_3.num) {
+        totals[name][MES_3.label] += km;
+        mes3Total += km;
       }
     }
 
@@ -126,13 +129,14 @@ async function loadDashboard() {
         <td>${km[MES_1.label].toFixed(1)} km</td>
         <td>${km[MES_2.label].toFixed(1)} km</td>
         <td>${km.actividadesMes2}</td>
+        <td>${km[MES_3.label].toFixed(1)} km</td>
         <td>${km.total.toFixed(1)} km</td>
       </tr>
     `).join("");
 
-    const pct = Math.min(100, (mes2Total / META_KM) * 100);
+    const pct = Math.min(100, (mes3Total / META_KM) * 100);
     progressFill.style.width = pct + "%";
-    progressLabel.textContent = `${mes2Total.toFixed(1)} km de ${META_KM} km · ${pct.toFixed(0)}% de la meta de septiembre · Acumulado total del club: ${grandTotal.toFixed(1)} km`;
+    progressLabel.textContent = `${mes3Total.toFixed(1)} km de ${META_KM} km · ${pct.toFixed(0)}% de la meta de octubre · Acumulado total del club: ${grandTotal.toFixed(1)} km`;
 
   } catch (err) {
     console.error(err);
@@ -147,7 +151,7 @@ function showEmpty(msg) {
   const progressLabel = document.getElementById("progress-label");
   rankEl.innerHTML = "";
   progressFill.style.width = "0%";
-  progressLabel.textContent = `0 km de ${META_KM} km · 0% de la meta de septiembre`;
+  progressLabel.textContent = `0 km de ${META_KM} km · 0% de la meta de octubre`;
   emptyEl.style.display = "block";
   emptyEl.textContent = msg || "Aún no hay registros. ¡Sé el primero en registrar tu resultado!";
 }
