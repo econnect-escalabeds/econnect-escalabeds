@@ -10,7 +10,7 @@ const MES_1 = { num: 8, label: "KM Agosto" };
 const MES_2 = { num: 9, label: "KM Septiembre" };
 const MES_3 = { num: 10, label: "KM Octubre" };
 
-const META_KM = 800; // meta colectiva del mes en curso (Octubre) — edítala aquí cuando cambie
+const META_KM = 900; // meta colectiva del mes en curso (Octubre) — edítala aquí cuando cambie
 
 function parseCSV(text) {
   // Parser simple que respeta comillas de CSV estándar de Google Sheets
@@ -87,7 +87,7 @@ async function loadDashboard() {
       return;
     }
 
-    const totals = {}; // nombre -> { [MES_1.label]: km, [MES_2.label]: km, actividadesMes2: n, [MES_3.label]: km, total: km }
+    const totals = {}; // nombre -> { [MES_1.label]: km, [MES_2.label]: km, actividadesMes2: n, [MES_3.label]: km, actividadesMes3: n, total: km }
     let mes3Total = 0;
     let grandTotal = 0;
 
@@ -97,7 +97,7 @@ async function loadDashboard() {
       const km = parseDistance(r[distIdx]);
       if (!name) continue;
 
-      if (!totals[name]) totals[name] = { [MES_1.label]: 0, [MES_2.label]: 0, actividadesMes2: 0, [MES_3.label]: 0, total: 0 };
+      if (!totals[name]) totals[name] = { [MES_1.label]: 0, [MES_2.label]: 0, actividadesMes2: 0, [MES_3.label]: 0, actividadesMes3: 0, total: 0 };
       totals[name].total += km;
       grandTotal += km;
 
@@ -110,6 +110,7 @@ async function loadDashboard() {
       } else if (mes === MES_3.num) {
         totals[name][MES_3.label] += km;
         mes3Total += km;
+        totals[name].actividadesMes3 += 1; // cuenta toda actividad (correr o fuerza) registrada en el mes
       }
     }
 
@@ -130,6 +131,7 @@ async function loadDashboard() {
         <td>${km[MES_2.label].toFixed(1)} km</td>
         <td>${km.actividadesMes2}</td>
         <td>${km[MES_3.label].toFixed(1)} km</td>
+        <td>${km.actividadesMes3}</td>
         <td>${km.total.toFixed(1)} km</td>
       </tr>
     `).join("");
